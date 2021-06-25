@@ -1,5 +1,6 @@
 'use strict'
 
+const md5 = require('md5-node')
 const CommenService = require('./common')
 
 class UserService extends CommenService {
@@ -84,6 +85,36 @@ class UserService extends CommenService {
       return this.success(null, '删除成功！')
     }
     return this.error(null, '删除失败，没有当前数据！')
+  }
+
+  async getCurrentUser(token) {
+    const user = await ctx.model.User.findOne({ token })
+    if (user) {
+    }
+    return this.error(null, '查询失败，无当前用户')
+  }
+
+  async login(body) {
+    const { ctx, app } = this
+    const { phone, password } = body
+    const userList = await ctx.model.User.findAll({
+      phone,
+      password: md5(password)
+    })
+    if (userList.legth > 1) {
+    }
+    if (user) {
+      // user.token =
+      if (hasUser && hasUser.id !== id) {
+        return this.error(null, '用户已存在！')
+      }
+      await user.update(body, {
+        fields: ['name', 'phone', 'status', 'desc']
+      })
+      console.log(user.toJSON())
+      return this.success(user, '修改成功！')
+    }
+    return this.error(null, '用户名或密码错误！')
   }
 }
 

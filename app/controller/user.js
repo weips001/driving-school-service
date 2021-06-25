@@ -47,6 +47,15 @@ class UserController extends CommonController {
     const ctx = this.ctx
     ctx.body = await ctx.service.user.destroy(ctx.params.id)
   }
+  async login() {
+    const ctx = this.ctx
+    ctx.body = await ctx.service.user.login(ctx.request.body)
+  }
+  async getCurrentUser() {
+    const ctx = this.ctx
+    const token = this.getToken()
+    ctx.body = await ctx.service.user.getCurrentUser(token)
+  }
 }
 
 module.exports = UserController

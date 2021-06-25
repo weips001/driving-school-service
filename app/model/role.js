@@ -48,5 +48,20 @@ module.exports = app => {
       }
     }
   })
+  Role.getRole = async function(roleId) {
+    const role = await this.findByPk(roleId)
+    const authList = await app.model.Auth.findAll({
+      where: {
+        roleId
+      }
+    })
+    if (role) {
+      return {
+        ...role,
+        auth: authList
+      }
+    }
+    return null
+  }
   return Role
 }

@@ -19,6 +19,14 @@ class CommonController extends Controller {
     const schoolId = ctx.header['school-id']
     return schoolId || null
   }
+  getToken() {
+    const authorization = ctx.request.header.authorization
+    if (authorization.length > 7) {
+      const token = authorization.substr(7, 1000)
+      return token
+    }
+    return null
+  }
   wrapSchoolId(options) {
     const schoolId = this.getSchoolId()
     if (schoolId) {
