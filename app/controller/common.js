@@ -14,17 +14,17 @@ class CommonController extends Controller {
     }
     return query
   }
-  getPlaceId() {
+  getSchoolId() {
     const ctx = this.ctx
-    const placeId = ctx.header['place-id']
-    return placeId || null
+    const schoolId = ctx.header['school-id']
+    return schoolId || null
   }
-  wrapWhere(options) {
-    const placeId = this.getPlaceId()
-    if (placeId) {
+  wrapSchoolId(options) {
+    const schoolId = this.getSchoolId()
+    if (schoolId) {
       return {
         ...options,
-        placeId
+        schoolId
       }
     }
     return options

@@ -3,15 +3,21 @@
 
 import 'egg';
 import ExportAdmin = require('../../../app/model/admin');
-import ExportPlace = require('../../../app/model/place');
+import ExportAuth = require('../../../app/model/auth');
+import ExportRole = require('../../../app/model/role');
+import ExportSchool = require('../../../app/model/school');
 import ExportUser = require('../../../app/model/user');
 import ExportVip = require('../../../app/model/vip');
+import ExportWeUser = require('../../../app/model/weUser');
 
 declare module 'egg' {
   interface IModel {
     Admin: ReturnType<typeof ExportAdmin>;
-    Place: ReturnType<typeof ExportPlace>;
+    Auth: ReturnType<typeof ExportAuth>;
+    Role: ReturnType<typeof ExportRole>;
+    School: ReturnType<typeof ExportSchool>;
     User: ReturnType<typeof ExportUser>;
     Vip: ReturnType<typeof ExportVip>;
+    WeUser: ReturnType<typeof ExportWeUser>;
   }
 }
