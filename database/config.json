@@ -1,6 +1,13 @@
 {
   "development": {
     "username": "root",
+    "password": "Wps097200.+",
+    "database": "playschool",
+    "host": "39.99.228.79",
+    "dialect": "mysql"
+  },
+  "development1": {
+    "username": "root",
     "password": "www.2020",
     "database": "wps",
     "host": "10.213.134.254",

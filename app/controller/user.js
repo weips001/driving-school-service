@@ -32,15 +32,15 @@ class UserController extends CommonController {
   async create() {
     const ctx = this.ctx
     let { body } = ctx.request
-    body = this.wrapSchoolId(body)
-    ctx.body = await ctx.service.user.create(body)
+    const schoolId = this.getSchoolId()
+    ctx.body = await ctx.service.user.create(schoolId, body)
   }
 
   async update() {
     const ctx = this.ctx
     let { body } = ctx.request
-    body = this.wrapSchoolId(body)
-    ctx.body = await ctx.service.user.update(ctx.params.id, body)
+    const schoolId = this.getSchoolId()
+    ctx.body = await ctx.service.user.update(ctx.params.id, schoolId, body)
   }
 
   async destroy() {
@@ -53,8 +53,9 @@ class UserController extends CommonController {
   }
   async getCurrentUser() {
     const ctx = this.ctx
-    const token = this.getToken()
-    ctx.body = await ctx.service.user.getCurrentUser(token)
+    // const token = this.getToken()
+    const id = '7afa1bb4f665405c84af4d72d1c265f9'
+    ctx.body = await ctx.service.user.getCurrentUser(id)
   }
 }
 

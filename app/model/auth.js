@@ -21,22 +21,16 @@ module.exports = app => {
         }
       }
     },
-    schoolId: {
-      type: UUID,
-      field: 'school_id',
-      comment: '驾校id',
+    authCode: {
+      type: STRING(20),
       allowNull: false,
+      field: 'auth_code',
+      comment: '权限编码',
       validate: {
         notEmpty: {
-          msg: '驾校id不能為空'
+          msg: '权限编码不能為空'
         }
       }
-    },
-    roleId: {
-      type: CHAR(36),
-      field: 'role_id',
-      comment: '角色id',
-      allowNull: true
     },
     desc: {
       type: STRING(300),

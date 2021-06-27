@@ -85,19 +85,21 @@ module.exports = app => {
     }
   })
   // 获取完整的用户信息，可以根据token或者id
-  User.getUser = function(value, key = 'id') {
+  User.getUser = function (value, key = 'id') {
     const user = this.findOne({
       where: {
         [key]: value
       }
     })
     if (user) {
-      app.model.Role.findAll({
+      const authList = app.model.Role.findAll({
         where: {
           userId: user.userId
         }
       })
+      user.auth = authList
     }
+    return user
   }
   return User
 }

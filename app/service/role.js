@@ -20,34 +20,32 @@ class RoleService extends CommenService {
   async detail(id) {
     const { ctx } = this
     const role = await ctx.model.Role.findByPk(id)
-    const res = await role.getVip()
-    console.log(res.toJSON())
     if (role) {
       return this.success(role, '获取详情成功！')
     }
     return this.error(null, '无当前数据，获取详情失败！')
   }
 
-  async create(body) {
+  async create(schoolId, body) {
     const { ctx, app } = this
     const { Op } = app.Sequelize
-    const { roleName = '', schoolId } = body
+    const { roleName = '' } = body
     const [role, created] = await ctx.model.Role.findOrCreate({
       where: {
         roleName,
         schoolId
       },
       defaults: body,
-      fields: ['roleName', 'schoolId', 'roleId', 'desc']
+      fields: ['roleName', 'schoolId', 'desc']
     })
     if (!created) {
       return this.error(null, '角色名称已存在！')
     }
     return this.success(role, '角色创建成功！')
   }
-  async update(id, body) {
+  async update(id, schoolId, body) {
     const { ctx, app } = this
-    const { roleName, schoolId } = body
+    const { roleName } = body
     const role = await ctx.model.Role.findByPk(id)
     if (role) {
       const hasRole = await ctx.model.Role.findOne({
@@ -60,7 +58,7 @@ class RoleService extends CommenService {
         return this.error(null, '角色名称已存在！')
       }
       await role.update(body, {
-        fields: ['roleName', 'roleId', 'desc']
+        fields: ['roleName', 'desc']
       })
       console.log(role.toJSON())
       return this.success(role, '修改成功！')

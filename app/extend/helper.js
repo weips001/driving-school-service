@@ -1,6 +1,6 @@
 'use strict';
 
-const uuidV1 = require('uuid/v1');
+const uuid = require('uuid').v4;
 const crypto = require('crypto');
 
 function formateHost(host) {
@@ -28,7 +28,7 @@ exports.sleep = function sleep(ms = 1000) {
 };
 
 exports.generateId = function generateId() {
-  return uuidV1();
+  return uuid();
 };
 
 const OPERATOR_RE = /[|\\{}()[\]^$+*?.]/g;
@@ -117,7 +117,7 @@ exports.masterCheck = function masterCheck() {
 };
 
 exports.formateHost = formateHost;
-exports.toInt = function toInt (str) {
+exports.toInt = function toInt(str) {
   if (typeof str === 'number') return str
   if (!str) return str
   return parseInt(str, 10) || 0
@@ -155,7 +155,7 @@ exports.getServerHosts = async function getServerHosts(configType) {
 
 
 // const Excel = require('exceljs');
- 
+
 // exports.excelNew = async function excelNew(headers, name) {
 //   let columns = [];
 //   let titleRows = headers.length;

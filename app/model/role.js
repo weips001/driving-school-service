@@ -27,15 +27,14 @@ module.exports = app => {
       comment: '驾校id',
       allowNull: false,
       validate: {
+        len: {
+          args: [32, 32],
+          msg: '无效的驾校id'
+        },
         notEmpty: {
           msg: '驾校id不能為空'
         }
       }
-    },
-    userId: {
-      type: UUID,
-      field: 'user_id',
-      comment: '用户id'
     },
     desc: {
       type: STRING(300),
@@ -48,20 +47,9 @@ module.exports = app => {
       }
     }
   })
-  Role.getRole = async function(roleId) {
-    const role = await this.findByPk(roleId)
-    const authList = await app.model.Auth.findAll({
-      where: {
-        roleId
-      }
-    })
-    if (role) {
-      return {
-        ...role,
-        auth: authList
-      }
-    }
-    return null
-  }
+  // Role.getRole = async function (roleId, schoolId) {
+  //   await app.model.query('', {type: 'SELECT'})
+
+  // }
   return Role
 }

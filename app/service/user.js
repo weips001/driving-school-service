@@ -29,10 +29,11 @@ class UserService extends CommenService {
     return this.error(null, '无当前数据，获取详情失败！')
   }
 
-  async create(body) {
+  async create(schoolId, body) {
+    if (!schoolId) return this.noSchool()
     const { ctx, app } = this
     const { Op } = app.Sequelize
-    const { phone = '', schoolId } = body
+    const { phone = '' } = body
     console.log(body)
     const [user, created] = await ctx.model.User.findOrCreate({
       where: {
@@ -55,9 +56,10 @@ class UserService extends CommenService {
     }
     return this.success(user, '创建成功！')
   }
-  async update(id, body) {
+  async update(id, schoolId, body) {
+    if (!schoolId) return this.noSchool()
     const { ctx, app } = this
-    const { phone, schoolId } = body
+    const { phone } = body
     const user = await ctx.model.User.findByPk(id)
     if (user) {
       const hasUser = await ctx.model.User.findOne({
@@ -87,9 +89,14 @@ class UserService extends CommenService {
     return this.error(null, '删除失败，没有当前数据！')
   }
 
-  async getCurrentUser(token) {
-    const user = await ctx.model.User.findOne({ token })
+  async getCurrentUser(id) {
+    const { ctx, app } = this
+    await app.model.query('', { type: 'SELECT' })
+    const user = await ctx.model.User.findOne({ id })
     if (user) {
+      const currentUser = await ctx.model.User.getUser(id)
+      console.log(currentUser.toJSON())
+      return this.success(user, null)
     }
     return this.error(null, '查询失败，无当前用户')
   }

@@ -29,15 +29,15 @@ class RoleController extends CommonController {
   async create() {
     const ctx = this.ctx
     let { body } = ctx.request
-    body = this.wrapSchoolId(body)
-    ctx.body = await ctx.service.role.create(body)
+    const schoolId = this.getSchoolId()
+    ctx.body = await ctx.service.role.create(schoolId, body)
   }
 
   async update() {
     const ctx = this.ctx
     let { body } = ctx.request
-    body = this.wrapSchoolId(body)
-    ctx.body = await ctx.service.role.update(ctx.params.id, body)
+    const schoolId = this.getSchoolId()
+    ctx.body = await ctx.service.role.update(ctx.params.id, schoolId, body)
   }
 
   async destroy() {

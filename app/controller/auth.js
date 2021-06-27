@@ -12,7 +12,7 @@ class AuthController extends CommonController {
     const query = {
       limit,
       offset,
-      where: this.wrapSchoolId(where),
+      where,
       order: [
         ['createdAt', 'DESC'],
         ['authName', 'ASC']
@@ -29,14 +29,12 @@ class AuthController extends CommonController {
   async create() {
     const ctx = this.ctx
     let { body } = ctx.request
-    body = this.wrapSchoolId(body)
     ctx.body = await ctx.service.auth.create(body)
   }
 
   async update() {
     const ctx = this.ctx
     let { body } = ctx.request
-    body = this.wrapSchoolId(body)
     ctx.body = await ctx.service.auth.update(ctx.params.id, body)
   }
 

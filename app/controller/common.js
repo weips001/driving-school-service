@@ -20,8 +20,9 @@ class CommonController extends Controller {
     return schoolId || null
   }
   getToken() {
+    const ctx = this.ctx
     const authorization = ctx.request.header.authorization
-    if (authorization.length > 7) {
+    if (authorization && authorization.length > 7) {
       const token = authorization.substr(7, 1000)
       return token
     }
