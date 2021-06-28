@@ -65,7 +65,7 @@ module.exports = app => {
     },
     // TODO:加上jwt以后需要设置为必填
     token: {
-      type: STRING(100),
+      type: STRING(200),
       comment: 'token'
     },
     status: {
@@ -85,21 +85,37 @@ module.exports = app => {
     }
   })
   // 获取完整的用户信息，可以根据token或者id
-  User.getUser = function (value, key = 'id') {
-    const user = this.findOne({
+  User.getUser = async function(schoolId, userId) {
+    const user = await this.findOne({
       where: {
-        [key]: value
-      }
+        schoolId,
+        id: userId
+      },
+      attributes: { exclude: ['password'] }
     })
     if (user) {
-      const authList = app.model.Role.findAll({
+      const { phone, id } = user
+      // 從admin 庫裡面查找是否是超級管理員
+      const admin = await app.model.Admin.findOne({
         where: {
-          userId: user.userId
+          phone
         }
       })
-      user.auth = authList
+      console.log(JSON.stringify(admin, null, 2))
+      if (admin) {
+        const auth = await app.model.Auth.findAll()
+        user.auth = auth
+        return user
+      }
+      // const userRole = await app.model.RoleAuth.getUserRole(schoolId, id)
+      const users = await app.model.UserRole.getUserRole(schoolId, id)
+      const roleIds = users.map(user => user.roleId)
+      const auth = await app.model.RoleAuth.getAuthFromRole(schoolId, roleIds)
+      console.log(JSON.stringify(auth, null, 2))
+      //  await app.model.RoleAuth.getAuthFromRole(schoolId, )
+      return user
     }
-    return user
+    return null
   }
   return User
 }

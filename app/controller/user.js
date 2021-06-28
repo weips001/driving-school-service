@@ -53,9 +53,7 @@ class UserController extends CommonController {
   }
   async getCurrentUser() {
     const ctx = this.ctx
-    // const token = this.getToken()
-    const id = '7afa1bb4f665405c84af4d72d1c265f9'
-    ctx.body = await ctx.service.user.getCurrentUser(id)
+    ctx.body = await ctx.service.user.getCurrentUser()
   }
 }
 

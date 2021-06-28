@@ -52,20 +52,34 @@ module.exports = app => {
       }
     }
   })
-  // RoleAuth.getRole = async function(roleId) {
-  //   const role = await this.findByPk(roleId)
-  //   const authList = await app.model.Auth.findAll({
-  //     where: {
-  //       roleId
-  //     }
-  //   })
-  //   if (role) {
-  //     return {
-  //       ...role,
-  //       auth: authList
-  //     }
-  //   }
-  //   return null
-  // }
+  /**
+   * 根據角色id查找
+   *
+   * @param {string} schoolId 駕校id
+   * @param {string} roleId 角色id
+   * @returns 角色和權限信息
+   */
+  RoleAuth.getAuthFromRole = async function(schoolId, roleId) {
+    if (!schoolId) {
+      throw new Error('schoolId not is empty')
+    }
+    if (!roleId) {
+      throw new Error('roleId not is empty')
+    }
+    if (typeof roleId === 'string') {
+      roleId = [roleId]
+    }
+    const userRole = await app.model.query(
+      'SELECT r.role_name as roleName, r.desc, r.school_id as schoolId, a.auth_code as authCode, a.auth_name as authName from role r, auth a, role_auth ra WHERE r.school_id = :schoolId AND r.id IN (:roleId) AND r.id = ra.role_id AND a.id = ra.auth_id',
+      {
+        type: 'SELECT',
+        replacements: {
+          schoolId,
+          roleId
+        }
+      }
+    )
+    return userRole
+  }
   return RoleAuth
 }

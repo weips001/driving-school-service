@@ -17,6 +17,21 @@ class CommonService extends Service {
     return options
   }
 
+  createToken(userId) {
+    const expiresIn = 60 * 60
+    const app = this.app
+    const token = app.jwt.sign(
+      {
+        userId
+      },
+      app.config.jwt.secret,
+      {
+        expiresIn
+      }
+    )
+    return token
+  }
+
   success(data, msg = null) {
     return {
       code: '0',

@@ -18,32 +18,32 @@ module.exports = appInfo => {
       port: 7007
     }
   }
-  exports.sequelize = {
-    dialect: 'mysql',
-    host: '39.99.228.79',
-    username: 'root',
-    password: 'Wps097200.+',
-    port: 3306,
-    database: 'playschool',
-    timezone: '+08:00',
-    define: {
-      underscored: true,
-      freezeTableName: true
-    }
-  }
   // exports.sequelize = {
   //   dialect: 'mysql',
-  //   host: '10.213.134.254',
+  //   host: '39.99.228.79',
   //   username: 'root',
-  //   password: 'www.2020',
+  //   password: 'Wps097200.+',
   //   port: 3306,
-  //   database: 'wps',
+  //   database: 'playschool',
   //   timezone: '+08:00',
   //   define: {
   //     underscored: true,
   //     freezeTableName: true
   //   }
   // }
+  exports.sequelize = {
+    dialect: 'mysql',
+    host: '10.213.134.254',
+    username: 'root',
+    password: 'www.2020',
+    port: 3306,
+    database: 'wps',
+    timezone: '+08:00',
+    define: {
+      underscored: true,
+      freezeTableName: true
+    }
+  }
 
   config.multipart = {
     mode: 'file',

@@ -89,37 +89,40 @@ class UserService extends CommenService {
     return this.error(null, '删除失败，没有当前数据！')
   }
 
-  async getCurrentUser(id) {
+  async getCurrentUser() {
     const { ctx, app } = this
-    await app.model.query('', { type: 'SELECT' })
-    const user = await ctx.model.User.findOne({ id })
-    if (user) {
-      const currentUser = await ctx.model.User.getUser(id)
-      console.log(currentUser.toJSON())
-      return this.success(user, null)
+    const userId = (ctx.state.user && ctx.state.user.userId) || null
+    const schoolId = this.getSchoolId()
+    if (userId) {
+      const users = await ctx.model.User.getUser(schoolId, userId)
+      console.log(JSON.stringify(users, null, 2))
     }
-    return this.error(null, '查询失败，无当前用户')
+    return this.error(null, '没有当前用户信息，请联系管理员！')
   }
 
   async login(body) {
     const { ctx, app } = this
     const { phone, password } = body
-    const userList = await ctx.model.User.findAll({
-      phone,
-      password: md5(password)
-    })
-    if (userList.legth > 1) {
-    }
-    if (user) {
-      // user.token =
-      if (hasUser && hasUser.id !== id) {
-        return this.error(null, '用户已存在！')
+    const users = await ctx.model.User.findAll({
+      where: {
+        phone,
+        password: md5(password)
+      },
+      attributes: {
+        exclude: ['password']
       }
-      await user.update(body, {
-        fields: ['name', 'phone', 'status', 'desc']
-      })
-      console.log(user.toJSON())
-      return this.success(user, '修改成功！')
+    })
+    console.log(JSON.stringify(users, null, 2))
+    if (users.length) {
+      if (users.length === 1) {
+        const user = users[0]
+        const token = this.createToken(user.id)
+        user.token = token
+        await user.save()
+        await user.reload()
+        return this.success(user, null)
+      }
+      return this.success(users, null)
     }
     return this.error(null, '用户名或密码错误！')
   }
