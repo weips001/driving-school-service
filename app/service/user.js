@@ -94,8 +94,10 @@ class UserService extends CommenService {
     const userId = (ctx.state.user && ctx.state.user.userId) || null
     const schoolId = this.getSchoolId()
     if (userId) {
-      const users = await ctx.model.User.getUser(schoolId, userId)
-      console.log(JSON.stringify(users, null, 2))
+      const user = await ctx.model.User.getUser(schoolId, userId)
+      // const school = await ctx.model.School.findByPk(schoolId)
+      // console.log(JSON.stringify(school, null, 2))
+      return user
     }
     return this.error(null, '没有当前用户信息，请联系管理员！')
   }

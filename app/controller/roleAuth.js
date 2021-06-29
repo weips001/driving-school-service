@@ -8,9 +8,7 @@ class RoleAuthController extends CommonController {
       limit,
       offset,
       where: this.wrapSchoolId(where),
-      order: [
-        ['createdAt', 'DESC']
-      ]
+      order: [['createdAt', 'DESC']]
     }
     ctx.body = await ctx.service.roleAuth.list(query)
   }
@@ -37,6 +35,12 @@ class RoleAuthController extends CommonController {
   async destroy() {
     const ctx = this.ctx
     ctx.body = await ctx.service.roleAuth.destroy(ctx.params.id)
+  }
+  async bindAuth() {
+    const ctx = this.ctx
+    let { body } = ctx.request
+    const schoolId = this.getSchoolId()
+    ctx.body = await ctx.service.roleAuth.bindAuth(schoolId, body)
   }
 }
 

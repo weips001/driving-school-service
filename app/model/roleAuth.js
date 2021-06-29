@@ -59,7 +59,7 @@ module.exports = app => {
    * @param {string} roleId 角色id
    * @returns 角色和權限信息
    */
-  RoleAuth.getAuthFromRole = async function(schoolId, roleId) {
+  RoleAuth.getAuthCodesFromRole = async function(schoolId, roleId) {
     if (!schoolId) {
       throw new Error('schoolId not is empty')
     }
@@ -69,8 +69,8 @@ module.exports = app => {
     if (typeof roleId === 'string') {
       roleId = [roleId]
     }
-    const userRole = await app.model.query(
-      'SELECT r.role_name as roleName, r.desc, r.school_id as schoolId, a.auth_code as authCode, a.auth_name as authName from role r, auth a, role_auth ra WHERE r.school_id = :schoolId AND r.id IN (:roleId) AND r.id = ra.role_id AND a.id = ra.auth_id',
+    let authCodes = await app.model.query(
+      'SELECT DISTINCT a.auth_code as authCode from role r, auth a, role_auth ra WHERE r.school_id = :schoolId AND r.id IN (:roleId) AND r.id = ra.role_id AND a.id = ra.auth_id',
       {
         type: 'SELECT',
         replacements: {
@@ -79,7 +79,8 @@ module.exports = app => {
         }
       }
     )
-    return userRole
+    authCodes = authCodes.map(auth => auth.authCode)
+    return authCodes
   }
   return RoleAuth
 }
