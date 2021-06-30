@@ -86,15 +86,19 @@ module.exports = app => {
   })
   // 获取完整的用户信息，可以根据token或者id
   User.getUser = async function(schoolId, userId) {
+    const where = {
+      id: userId
+    }
+    if (schoolId) {
+      where.schoolId = schoolId
+    }
     const user = await this.findOne({
-      where: {
-        schoolId,
-        id: userId
-      },
+      where,
       attributes: { exclude: ['password'] }
     })
     if (user) {
       const { phone, id } = user
+      const userInfo = user.toJSON()
       // 從admin 庫裡面查找是否是超級管理員
       const admin = await app.model.Admin.findOne({
         where: {
@@ -103,17 +107,27 @@ module.exports = app => {
       })
       console.log(JSON.stringify(admin, null, 2))
       if (admin) {
-        const auth = await app.model.Auth.findAll()
-        user.auth = auth
-        return user
+        const auth = await app.model.query(
+          'SELECT DISTINCT auth_code AS authCode FROM `auth`',
+          {
+            type: 'SELECT'
+          }
+        )
+        userInfo.auth = auth.map(item => item.authCode)
+        userInfo.role = ['-1']
+        return userInfo
       }
       // const userRole = await app.model.RoleAuth.getUserRole(schoolId, id)
-      const users = await app.model.UserRole.getUserRole(schoolId, id)
-      const roleIds = users.map(user => user.roleId)
-      const auth = await app.model.RoleAuth.getAuthFromRole(schoolId, roleIds)
-      console.log(JSON.stringify(auth, null, 2))
-      //  await app.model.RoleAuth.getAuthFromRole(schoolId, )
-      return user
+      const roleIds = await app.model.UserRole.getRoleIds(schoolId, id)
+      const roleCodes = await app.model.Role.getRoleCodes(schoolId, roleIds)
+      userInfo.role = roleCodes
+      const auth = await app.model.RoleAuth.getAuthCodesFromRole(
+        schoolId,
+        roleIds
+      )
+      userInfo.auth = auth
+      // console.log(JSON.stringify(userInfo, null, 2))
+      return userInfo
     }
     return null
   }

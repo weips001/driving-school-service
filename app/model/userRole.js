@@ -57,11 +57,11 @@ module.exports = app => {
     }
   })
 
-  UserRole.getUserRole = async function(schoolId, userId) {
+  UserRole.getRoleIds = async function(schoolId, userId) {
     if (!schoolId) throw new Error('schoolId is empty!')
     if (!userId) throw new Error('userId is empty!')
-    const userRoles = await app.model.query(
-      'SELECT u.id AS userId, u.phone, u.name, u.token, u.status, u.desc, ur.role_id AS roleId  FROM user u LEFT JOIN user_role ur ON u.id = ur.user_id WHERE u.school_id = :schoolId AND u.id = :userId',
+    let roleIds = await app.model.query(
+      'SELECT DISTINCT ur.role_id AS roleId  FROM user u LEFT JOIN user_role ur ON u.id = ur.user_id WHERE u.school_id = :schoolId AND u.id = :userId',
       {
         type: 'SELECT',
         replacements: {
@@ -70,7 +70,8 @@ module.exports = app => {
         }
       }
     )
-    return userRoles
+    roleIds = roleIds.map(role => role.roleId)
+    return roleIds
   }
 
   return UserRole

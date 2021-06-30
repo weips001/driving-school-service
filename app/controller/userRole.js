@@ -8,9 +8,7 @@ class UserRoleController extends CommonController {
       limit,
       offset,
       where: this.wrapSchoolId(where),
-      order: [
-        ['createdAt', 'DESC']
-      ]
+      order: [['createdAt', 'DESC']]
     }
     ctx.body = await ctx.service.userRole.list(query)
   }
@@ -37,6 +35,12 @@ class UserRoleController extends CommonController {
   async destroy() {
     const ctx = this.ctx
     ctx.body = await ctx.service.userRole.destroy(ctx.params.id)
+  }
+  async bindRole() {
+    const ctx = this.ctx
+    let { body } = ctx.request
+    const schoolId = this.getSchoolId()
+    ctx.body = await ctx.service.userRole.bindRole(schoolId, body)
   }
 }
 

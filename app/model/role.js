@@ -21,6 +21,17 @@ module.exports = app => {
         }
       }
     },
+    roleCode: {
+      type: STRING(50),
+      allowNull: false,
+      field: 'role_code',
+      comment: '角色编码',
+      validate: {
+        notEmpty: {
+          msg: '角色编码不能為空'
+        }
+      }
+    },
     schoolId: {
       type: UUID,
       field: 'school_id',
@@ -47,9 +58,24 @@ module.exports = app => {
       }
     }
   })
-  // Role.getRole = async function (roleId, schoolId) {
-  //   await app.model.query('', {type: 'SELECT'})
-
-  // }
+  Role.getRoleCodes = async function(schoolId, roleId) {
+    if (!schoolId) throw new Error('schoolId is empty!')
+    if (!roleId) throw new Error('roleId is empty!')
+    if (typeof roleId === 'string') {
+      roleId = [roleId]
+    }
+    let roleCodes = await app.model.query(
+      'SELECT DISTINCT r.role_code AS roleCode FROM role r LEFT JOIN user_role ur ON r.id = ur.role_id WHERE r.id IN(:roleId) AND r.school_id = :schoolId',
+      {
+        type: 'SELECT',
+        replacements: {
+          schoolId,
+          roleId
+        }
+      }
+    )
+    roleCodes = roleCodes.map(role => role.roleCode)
+    return roleCodes
+  }
   return Role
 }

@@ -29,33 +29,35 @@ class RoleService extends CommenService {
   async create(schoolId, body) {
     const { ctx, app } = this
     const { Op } = app.Sequelize
-    const { roleName = '' } = body
+    const { roleName = '', roleCode } = body
     const [role, created] = await ctx.model.Role.findOrCreate({
       where: {
         roleName,
+        roleCode,
         schoolId
       },
       defaults: body,
-      fields: ['roleName', 'schoolId', 'desc']
+      fields: ['roleName', 'roleCode', 'schoolId', 'desc']
     })
     if (!created) {
-      return this.error(null, '角色名称已存在！')
+      return this.error(null, '角色名称或编码已存在！')
     }
     return this.success(role, '角色创建成功！')
   }
   async update(id, schoolId, body) {
     const { ctx, app } = this
-    const { roleName } = body
+    const { roleName, roleCode } = body
     const role = await ctx.model.Role.findByPk(id)
     if (role) {
       const hasRole = await ctx.model.Role.findOne({
         where: {
           roleName,
+          roleCode,
           schoolId
         }
       })
       if (hasRole && hasRole.id !== id) {
-        return this.error(null, '角色名称已存在！')
+        return this.error(null, '角色名称或编码已存在！')
       }
       await role.update(body, {
         fields: ['roleName', 'desc']
