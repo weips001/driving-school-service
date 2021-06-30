@@ -36,7 +36,7 @@ class UserRoleService extends CommenService {
       where: {
         roleId,
         schoolId,
-        userId,
+        userId
       },
       defaults: body,
       fields: ['roleId', 'schoolId', 'userId']
@@ -55,7 +55,7 @@ class UserRoleService extends CommenService {
         where: {
           roleId,
           schoolId,
-          userId,
+          userId
         }
       })
       if (hasUserRole && hasUserRole.id !== id) {
@@ -77,6 +77,45 @@ class UserRoleService extends CommenService {
       return this.success(null, '删除成功！')
     }
     return this.error(null, '删除失败，没有当前数据！')
+  }
+  async bindRole(schoolId, body) {
+    if (!schoolId) throw new Error('schoolId is empty!')
+    const { ctx } = this
+    const t = await ctx.model.transaction()
+    try {
+      const { userId, role } = body
+      await ctx.model.query(
+        'DELETE ur FROM user_role ur WHERE ur.school_id = :schoolId AND ur.user_id = :userId',
+        {
+          type: 'DELETE',
+          replacements: {
+            schoolId,
+            userId
+          },
+          transaction: t
+        }
+      )
+      if (role.length > 0) {
+        const roleParams = []
+        role.forEach(item => {
+          roleParams.push({
+            roleId: item,
+            schoolId,
+            userId
+          })
+        })
+        await ctx.model.UserRole.bulkCreate(roleParams, {
+          validate: true,
+          transaction: t
+        })
+      }
+      await t.commit()
+      return this.success(null, '角色绑定成功！')
+    } catch (e) {
+      await t.rollback()
+      console.log('e', e)
+      return this.error(null, '角色绑定失败！')
+    }
   }
 }
 

@@ -86,11 +86,14 @@ module.exports = app => {
   })
   // 获取完整的用户信息，可以根据token或者id
   User.getUser = async function(schoolId, userId) {
+    const where = {
+      id: userId
+    }
+    if (schoolId) {
+      where.schoolId = schoolId
+    }
     const user = await this.findOne({
-      where: {
-        schoolId,
-        id: userId
-      },
+      where,
       attributes: { exclude: ['password'] }
     })
     if (user) {
@@ -104,8 +107,14 @@ module.exports = app => {
       })
       console.log(JSON.stringify(admin, null, 2))
       if (admin) {
-        const auth = await app.model.Auth.findAll()
-        userInfo.auth = auth
+        const auth = await app.model.query(
+          'SELECT DISTINCT auth_code AS authCode FROM `auth`',
+          {
+            type: 'SELECT'
+          }
+        )
+        userInfo.auth = auth.map(item => item.authCode)
+        userInfo.role = ['-1']
         return userInfo
       }
       // const userRole = await app.model.RoleAuth.getUserRole(schoolId, id)

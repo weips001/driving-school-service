@@ -21,8 +21,6 @@ class UserService extends CommenService {
   async detail(id) {
     const { ctx } = this
     const user = await ctx.model.User.findByPk(id)
-    const res = await user.getVip()
-    console.log(res.toJSON())
     if (user) {
       return this.success(user, '获取详情成功！')
     }
@@ -97,7 +95,10 @@ class UserService extends CommenService {
       const user = await ctx.model.User.getUser(schoolId, userId)
       // const school = await ctx.model.School.findByPk(schoolId)
       // console.log(JSON.stringify(school, null, 2))
-      return user
+      if (user) {
+        return this.success(user, null)
+      }
+      return this.error(null, '没有当前用户信息，请联系管理员！')
     }
     return this.error(null, '没有当前用户信息，请联系管理员！')
   }

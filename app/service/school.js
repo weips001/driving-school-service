@@ -20,8 +20,6 @@ class SchoolService extends CommenService {
   async detail(id) {
     const { ctx } = this
     const school = await ctx.model.School.findByPk(id)
-    const res = await school.getVip()
-    console.log(res.toJSON())
     if (school) {
       return this.success(school, '获取详情成功！')
     }

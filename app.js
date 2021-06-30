@@ -35,12 +35,26 @@ class AppBootHook {
       await this.app.model.sync({ force: false, alter: true })
       const superMan1 = {
         name: '韦鹏帅',
-        phone: '13271591339'
+        phone: '13271591339',
+        desc: '皇上'
       }
       const superMan2 = {
         name: '李三才',
-        phone: '15395833823'
+        phone: '15395833823',
+        desc: '小李子'
       }
+      await this.app.model.Admin.findOrCreate({
+        where: {
+          phone: superMan1.phone
+        },
+        defaults: superMan1
+      })
+      await this.app.model.Admin.findOrCreate({
+        where: {
+          phone: superMan2.phone
+        },
+        defaults: superMan2
+      })
       await this.app.model.User.findOrCreate({
         where: {
           phone: superMan1.phone
