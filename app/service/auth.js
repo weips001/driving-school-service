@@ -67,9 +67,17 @@ class AuthService extends CommenService {
     }
     return this.error(null, '没有查询到当前数据，无法修改！')
   }
-  async destroy() {
+  async destroy(authId) {
     const { ctx } = this
-    const auth = await ctx.model.Auth.findByPk(ctx.params.id)
+    const roleAuth = await ctx.model.RoleAuth.findOne({
+      where: {
+        authId
+      }
+    })
+    if (roleAuth) {
+      this.error(null, '请解除权限，再进行删除！')
+    }
+    const auth = await ctx.model.Auth.findByPk(authId)
     if (auth) {
       await auth.destroy()
       return this.success(null, '删除成功！')
