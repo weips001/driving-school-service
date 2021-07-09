@@ -16,14 +16,14 @@ module.exports = app => {
   // require('./role')(app);
   // require('./user')(app);
   require('./admin')(app)
-  require('./school')(app)
+  require('./place')(app)
   require('./auth')(app)
   require('./role')(app)
   require('./roleAuth')(app)
   require('./user')(app)
   require('./userRole')(app)
   require('./vip')(app)
-  // require('./school')(app)
+  // require('./place')(app)
   // require('./student')(app)
   // require('./gameBi')(app)
   // require('./vip')(app)

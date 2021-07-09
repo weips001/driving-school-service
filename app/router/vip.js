@@ -6,7 +6,7 @@ module.exports = app => {
 // car, carManagement, addCar, editCar,
 // dict, studentSource
 // fund, fundList, addFundConfig, editFundConfig
-// school, School, addSchool, editSchool, regionList, 
+// place, Place, addPlace, editPlace, regionList,
 // regionAdd, regionEdit, classicList, classicAdd, classicEdit, signUp
 // signUpAdd, signUpEdit
 // student, studentList, studentListAdd, studentListEdit

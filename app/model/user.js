@@ -20,9 +20,9 @@ module.exports = app => {
         }
       }
     },
-    schoolId: {
+    placeId: {
       type: UUID,
-      field: 'school_id',
+      field: 'place_id',
       comment: '驾校id',
       allowNull: true,
       validate: {
@@ -85,12 +85,12 @@ module.exports = app => {
     }
   })
   // 获取完整的用户信息，可以根据token或者id
-  User.getUser = async function(schoolId, userId) {
+  User.getUser = async function(placeId, userId) {
     const where = {
       id: userId
     }
-    if (schoolId) {
-      where.schoolId = schoolId
+    if (placeId) {
+      where.placeId = placeId
     }
     const user = await this.findOne({
       where,
@@ -114,15 +114,15 @@ module.exports = app => {
           }
         )
         userInfo.auth = auth.map(item => item.authCode)
-        userInfo.role = ['-1']
+        userInfo.role = ['-2']
         return userInfo
       }
-      // const userRole = await app.model.RoleAuth.getUserRole(schoolId, id)
-      const roleIds = await app.model.UserRole.getRoleIds(schoolId, id)
-      const roleCodes = await app.model.Role.getRoleCodes(schoolId, roleIds)
+      // const userRole = await app.model.RoleAuth.getUserRole(placeId, id)
+      const roleIds = await app.model.UserRole.getRoleIds(placeId, id)
+      const roleCodes = await app.model.Role.getRoleCodes(placeId, roleIds)
       userInfo.role = roleCodes
       const auth = await app.model.RoleAuth.getAuthCodesFromRole(
-        schoolId,
+        placeId,
         roleIds
       )
       userInfo.auth = auth

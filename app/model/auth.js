@@ -32,6 +32,19 @@ module.exports = app => {
         }
       }
     },
+    authFlag: {
+      type: STRING(2),
+      allowNull: false,
+      field: 'auth_flag',
+      comment: '权限标识，是否可分配',
+      defaultValue: '-1',
+      validate: {
+        isIn: {
+          args: [['-1', '-2']],
+          msg: '当前权限不可用'
+        }
+      }
+    },
     desc: {
       type: STRING(300),
       allowNull: false,

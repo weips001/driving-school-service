@@ -15,7 +15,7 @@ class UserController extends CommonController {
     const query = {
       limit,
       offset,
-      where: this.wrapSchoolId(where),
+      where: this.wrapplaceId(where),
       order: [
         ['createdAt', 'DESC'],
         ['name', 'ASC']
@@ -32,15 +32,15 @@ class UserController extends CommonController {
   async create() {
     const ctx = this.ctx
     let { body } = ctx.request
-    const schoolId = this.getSchoolId()
-    ctx.body = await ctx.service.user.create(schoolId, body)
+    const placeId = this.getPlaceId()
+    ctx.body = await ctx.service.user.create(placeId, body)
   }
 
   async update() {
     const ctx = this.ctx
     let { body } = ctx.request
-    const schoolId = this.getSchoolId()
-    ctx.body = await ctx.service.user.update(ctx.params.id, schoolId, body)
+    const placeId = this.getPlaceId()
+    ctx.body = await ctx.service.user.update(ctx.params.id, placeId, body)
   }
 
   async destroy() {

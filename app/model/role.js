@@ -32,9 +32,9 @@ module.exports = app => {
         }
       }
     },
-    schoolId: {
+    placeId: {
       type: UUID,
-      field: 'school_id',
+      field: 'place_id',
       comment: '驾校id',
       allowNull: false,
       validate: {
@@ -58,18 +58,17 @@ module.exports = app => {
       }
     }
   })
-  Role.getRoleCodes = async function(schoolId, roleId) {
-    if (!schoolId) throw new Error('schoolId is empty!')
+  Role.getRoleCodes = async function(placeId, roleId) {
     if (!roleId) throw new Error('roleId is empty!')
     if (typeof roleId === 'string') {
       roleId = [roleId]
     }
     let roleCodes = await app.model.query(
-      'SELECT DISTINCT r.role_code AS roleCode FROM role r LEFT JOIN user_role ur ON r.id = ur.role_id WHERE r.id IN(:roleId) AND r.school_id = :schoolId',
+      'SELECT DISTINCT r.role_code AS roleCode FROM role r LEFT JOIN user_role ur ON r.id = ur.role_id WHERE r.id IN(:roleId) AND r.place_id = :placeId',
       {
         type: 'SELECT',
         replacements: {
-          schoolId,
+          placeId,
           roleId
         }
       }

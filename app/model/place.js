@@ -2,7 +2,7 @@
 const uuid = require('uuid').v4
 module.exports = app => {
   const { STRING, VIRTUAL, DATE, UUID } = app.Sequelize
-  const School = app.model.define('school', {
+  const Place = app.model.define('place', {
     id: {
       type: UUID,
       primaryKey: true,
@@ -10,10 +10,10 @@ module.exports = app => {
         return uuid().replace(/-/g, '')
       }
     },
-    schoolName: {
+    placeName: {
       type: STRING(100),
       allowNull: false,
-      field: 'school_name',
+      field: 'place_name',
       comment: '驾校名称',
       validate: {
         notEmpty: {
@@ -21,10 +21,10 @@ module.exports = app => {
         }
       }
     },
-    schoolLoaction: {
+    placeLoaction: {
       type: STRING(120),
       allowNull: false,
-      field: 'school_loaction',
+      field: 'place_loaction',
       comment: '驾校位置',
       validate: {
         notEmpty: {
@@ -79,5 +79,5 @@ module.exports = app => {
       comment: '驾校描述'
     }
   })
-  return School
+  return Place
 }

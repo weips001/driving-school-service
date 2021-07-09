@@ -7,7 +7,7 @@ class UserRoleController extends CommonController {
     const query = {
       limit,
       offset,
-      where: this.wrapSchoolId(where),
+      where: this.wrapplaceId(where),
       order: [['createdAt', 'DESC']]
     }
     ctx.body = await ctx.service.userRole.list(query)
@@ -21,15 +21,15 @@ class UserRoleController extends CommonController {
   async create() {
     const ctx = this.ctx
     let { body } = ctx.request
-    const schoolId = this.getSchoolId()
-    ctx.body = await ctx.service.userRole.create(schoolId, body)
+    const placeId = this.getPlaceId()
+    ctx.body = await ctx.service.userRole.create(placeId, body)
   }
 
   async update() {
     const ctx = this.ctx
     let { body } = ctx.request
-    const schoolId = this.getSchoolId()
-    ctx.body = await ctx.service.userRole.update(ctx.params.id, schoolId, body)
+    const placeId = this.getPlaceId()
+    ctx.body = await ctx.service.userRole.update(ctx.params.id, placeId, body)
   }
 
   async destroy() {
@@ -39,8 +39,15 @@ class UserRoleController extends CommonController {
   async bindRole() {
     const ctx = this.ctx
     let { body } = ctx.request
-    const schoolId = this.getSchoolId()
-    ctx.body = await ctx.service.userRole.bindRole(schoolId, body)
+    const placeId = this.getPlaceId()
+    ctx.body = await ctx.service.userRole.bindRole(placeId, body)
+  }
+
+  async getRoleIdsByUser() {
+    const ctx = this.ctx
+    let { body } = ctx.request
+    const placeId = this.getPlaceId()
+    ctx.body = await ctx.service.userRole.getRoleIdsByUser(placeId, body.userId)
   }
 }
 

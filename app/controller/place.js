@@ -1,5 +1,5 @@
 const CommonController = require('./common')
-class SchoolController extends CommonController {
+class PlaceController extends CommonController {
   async index() {
     const ctx = this.ctx
     let {
@@ -7,15 +7,15 @@ class SchoolController extends CommonController {
       offset,
       adminPhone,
       adminName,
-      schoolName
+      placeName
     } = this.getPageQuery()
     const { Op } = this.app.Sequelize
     const query = {
       limit,
       offset,
       where: {
-        schoolName: {
-          [Op.startsWith]: schoolName || ''
+        placeName: {
+          [Op.startsWith]: placeName || ''
         },
         adminPhone: {
           [Op.startsWith]: adminPhone || ''
@@ -26,33 +26,33 @@ class SchoolController extends CommonController {
       },
       order: [
         ['createdAt', 'DESC'],
-        ['schoolName', 'ASC']
+        ['placeName', 'ASC']
       ]
     }
-    ctx.body = await ctx.service.school.list(query)
+    ctx.body = await ctx.service.place.list(query)
   }
 
   async show() {
     const ctx = this.ctx
-    ctx.body = await ctx.service.school.detail(ctx.params.id)
+    ctx.body = await ctx.service.place.detail(ctx.params.id)
   }
 
   async create() {
     const ctx = this.ctx
-    ctx.body = await ctx.service.school.create(ctx.request.body)
+    ctx.body = await ctx.service.place.create(ctx.request.body)
   }
 
   async update() {
     const ctx = this.ctx
-    let value = this.getSchoolId()
+    let value = this.getPlaceId()
     console.log(value)
-    ctx.body = await ctx.service.school.update(ctx.params.id, ctx.request.body)
+    ctx.body = await ctx.service.place.update(ctx.params.id, ctx.request.body)
   }
 
   async destroy() {
     const ctx = this.ctx
-    ctx.body = await ctx.service.school.destroy(ctx.params.id)
+    ctx.body = await ctx.service.place.destroy(ctx.params.id)
   }
 }
 
-module.exports = SchoolController
+module.exports = PlaceController

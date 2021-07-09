@@ -6,13 +6,10 @@ class AuthService extends CommenService {
   async list(query) {
     const { ctx } = this
     const { count, rows } = await ctx.model.Auth.findAndCountAll(query)
-    const result = {
-      total: count,
-      list: rows
-    }
-    const res = this.success(result, '查询成功！')
+    const res = this.success(rows, '查询成功！')
     return {
       ...res,
+      total: count,
       success: true
     }
   }
@@ -37,7 +34,7 @@ class AuthService extends CommenService {
     const [auth, created] = await ctx.model.Auth.findOrCreate({
       where,
       defaults: body,
-      fields: ['authName', 'authCode', 'desc']
+      fields: ['authName', 'authCode', 'authFlag', 'desc']
     })
     if (!created) {
       return this.error(null, '权限名称或编码已存在！')
@@ -60,9 +57,8 @@ class AuthService extends CommenService {
         return this.error(null, '权限名称或编码已存在！')
       }
       await auth.update(body, {
-        fields: ['authName', 'desc']
+        fields: ['authName', 'authCode', 'authFlag', 'desc']
       })
-      console.log(auth.toJSON())
       return this.success(auth, '修改成功！')
     }
     return this.error(null, '没有查询到当前数据，无法修改！')
@@ -75,7 +71,7 @@ class AuthService extends CommenService {
       }
     })
     if (roleAuth) {
-      this.error(null, '请解除权限，再进行删除！')
+      return this.error(null, '请解除权限，再进行删除！')
     }
     const auth = await ctx.model.Auth.findByPk(authId)
     if (auth) {
@@ -83,6 +79,19 @@ class AuthService extends CommenService {
       return this.success(null, '删除成功！')
     }
     return this.error(null, '删除失败，没有当前数据！')
+  }
+  async getAllAuth() {
+    const { ctx } = this
+    const list = await ctx.model.Auth.findAll({
+      where: {
+        authFlag: '-1'
+      },
+      attributes: [
+        ['id', 'value'],
+        ['auth_name', 'label']
+      ]
+    })
+    return this.success(list, null)
   }
 }
 

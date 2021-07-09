@@ -7,7 +7,7 @@ class RoleAuthController extends CommonController {
     const query = {
       limit,
       offset,
-      where: this.wrapSchoolId(where),
+      where: this.wrapplaceId(where),
       order: [['createdAt', 'DESC']]
     }
     ctx.body = await ctx.service.roleAuth.list(query)
@@ -21,15 +21,15 @@ class RoleAuthController extends CommonController {
   async create() {
     const ctx = this.ctx
     let { body } = ctx.request
-    const schoolId = this.getSchoolId()
-    ctx.body = await ctx.service.roleAuth.create(schoolId, body)
+    const placeId = this.getPlaceId()
+    ctx.body = await ctx.service.roleAuth.create(placeId, body)
   }
 
   async update() {
     const ctx = this.ctx
     let { body } = ctx.request
-    const schoolId = this.getSchoolId()
-    ctx.body = await ctx.service.roleAuth.update(ctx.params.id, schoolId, body)
+    const placeId = this.getPlaceId()
+    ctx.body = await ctx.service.roleAuth.update(ctx.params.id, placeId, body)
   }
 
   async destroy() {
@@ -39,8 +39,14 @@ class RoleAuthController extends CommonController {
   async bindAuth() {
     const ctx = this.ctx
     let { body } = ctx.request
-    const schoolId = this.getSchoolId()
-    ctx.body = await ctx.service.roleAuth.bindAuth(schoolId, body)
+    const placeId = this.getPlaceId()
+    ctx.body = await ctx.service.roleAuth.bindAuth(placeId, body)
+  }
+  async getAuthFromRole() {
+    const ctx = this.ctx
+    let { body } = ctx.request
+    const placeId = this.getPlaceId()
+    ctx.body = await ctx.service.roleAuth.getAuthFromRole(placeId, body.roleId)
   }
 }
 

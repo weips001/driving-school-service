@@ -21,7 +21,7 @@ module.exports = app => {
     },
     phone: {
       type: STRING(11),
-      allowNull:false,
+      allowNull: false,
       validate: {
         is: {
           args: /^[1][0-9]{10}$/,
@@ -31,7 +31,7 @@ module.exports = app => {
     },
     code: {
       type: STRING(5),
-      defaultValue: '-1'
+      defaultValue: '-2'
     }
   })
 

@@ -35,7 +35,7 @@ class VipController extends CommonController {
     const query = {
       limit,
       offset,
-      where: this.wrapSchoolId(where),
+      where: this.wrapplaceId(where),
       order: [['createdAt', 'DESC']]
     }
     ctx.body = await ctx.service.vip.list(query)

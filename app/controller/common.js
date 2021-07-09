@@ -14,10 +14,10 @@ class CommonController extends Controller {
     }
     return query
   }
-  getSchoolId() {
+  getPlaceId() {
     const ctx = this.ctx
-    const schoolId = ctx.header['school-id']
-    return schoolId || null
+    const placeId = ctx.header['place-id']
+    return placeId || null
   }
   getToken() {
     const ctx = this.ctx
@@ -28,12 +28,12 @@ class CommonController extends Controller {
     }
     return null
   }
-  wrapSchoolId(options) {
-    const schoolId = this.getSchoolId()
-    if (schoolId) {
+  wrapplaceId(options) {
+    const placeId = this.getPlaceId()
+    if (placeId) {
       return {
         ...options,
-        schoolId
+        placeId
       }
     }
     return options

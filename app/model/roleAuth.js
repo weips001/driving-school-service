@@ -40,9 +40,9 @@ module.exports = app => {
         }
       }
     },
-    schoolId: {
+    placeId: {
       type: UUID,
-      field: 'school_id',
+      field: 'place_id',
       comment: '驾校id',
       allowNull: false,
       validate: {
@@ -55,13 +55,13 @@ module.exports = app => {
   /**
    * 根據角色id查找
    *
-   * @param {string} schoolId 駕校id
+   * @param {string} placeId 駕校id
    * @param {string} roleId 角色id
    * @returns 角色和權限信息
    */
-  RoleAuth.getAuthCodesFromRole = async function(schoolId, roleId) {
-    if (!schoolId) {
-      throw new Error('schoolId not is empty')
+  RoleAuth.getAuthCodesFromRole = async function(placeId, roleId) {
+    if (!placeId) {
+      throw new Error('placeId not is empty')
     }
     if (!roleId) {
       throw new Error('roleId not is empty')
@@ -70,11 +70,11 @@ module.exports = app => {
       roleId = [roleId]
     }
     let authCodes = await app.model.query(
-      'SELECT DISTINCT a.auth_code as authCode from role r, auth a, role_auth ra WHERE r.school_id = :schoolId AND r.id IN (:roleId) AND r.id = ra.role_id AND a.id = ra.auth_id',
+      'SELECT DISTINCT a.auth_code as authCode from role r, auth a, role_auth ra WHERE r.place_id = :placeId AND r.id IN (:roleId) AND r.id = ra.role_id AND a.id = ra.auth_id',
       {
         type: 'SELECT',
         replacements: {
-          schoolId,
+          placeId,
           roleId
         }
       }

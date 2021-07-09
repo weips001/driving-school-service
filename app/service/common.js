@@ -1,17 +1,17 @@
 const Service = require('egg').Service
 
 class CommonService extends Service {
-  getSchoolId() {
+  getPlaceId() {
     const ctx = this.ctx
-    const schoolId = ctx.header['school-id']
-    return schoolId || null
+    const placeId = ctx.header['place-id']
+    return placeId || null
   }
-  wrapSchoolId(options) {
-    const schoolId = this.getSchoolId()
-    if (schoolId) {
+  wrapplaceId(options) {
+    const placeId = this.getPlaceId()
+    if (placeId) {
       return {
         ...options,
-        schoolId
+        placeId
       }
     }
     return options
@@ -47,7 +47,7 @@ class CommonService extends Service {
       msg
     }
   }
-  noSchool() {
+  noPlace() {
     return this.error(null, '当前用户没有绑定驾校，无法操作！')
   }
 }

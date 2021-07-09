@@ -24,7 +24,7 @@ module.exports = appInfo => {
   //   username: 'root',
   //   password: 'Wps097200.+',
   //   port: 3306,
-  //   database: 'playschool',
+  //   database: 'playplace',
   //   timezone: '+08:00',
   //   define: {
   //     underscored: true,
@@ -77,7 +77,23 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1577165435387_2425'
 
   // add your middleware config here
-  config.middleware = []
+  config.middleware = ['check']
+
+  exports.check = {
+    match(ctx) {
+      const { request } = ctx
+      const { method, url } = request
+      const whiteUrl = ['/api/user/login', '/api/place', '/api/auth']
+      const isInUrl = whiteUrl.some(item => url.startsWith(item))
+      if (isInUrl) {
+        return false
+      }
+      // console.log(request)
+      const whiteMethod = ['POST', 'PUT']
+      // console.log('request.method', method)
+      return whiteMethod.includes(method)
+    }
+  }
 
   exports.http = {
     headers: {

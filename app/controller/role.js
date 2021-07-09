@@ -12,9 +12,9 @@ class RoleController extends CommonController {
     const query = {
       limit,
       offset,
-      where: this.wrapSchoolId(where),
+      where: this.wrapplaceId(where),
       order: [
-        ['createdAt', 'DESC'],
+        ['createdAt', 'Asc'],
         ['roleName', 'ASC']
       ]
     }
@@ -29,20 +29,25 @@ class RoleController extends CommonController {
   async create() {
     const ctx = this.ctx
     let { body } = ctx.request
-    const schoolId = this.getSchoolId()
-    ctx.body = await ctx.service.role.create(schoolId, body)
+    const placeId = this.getPlaceId()
+    ctx.body = await ctx.service.role.create(placeId, body)
   }
 
   async update() {
     const ctx = this.ctx
     let { body } = ctx.request
-    const schoolId = this.getSchoolId()
-    ctx.body = await ctx.service.role.update(ctx.params.id, schoolId, body)
+    const placeId = this.getPlaceId()
+    ctx.body = await ctx.service.role.update(ctx.params.id, placeId, body)
   }
 
   async destroy() {
     const ctx = this.ctx
     ctx.body = await ctx.service.role.destroy(ctx.params.id)
+  }
+  async getAllRole() {
+    const ctx = this.ctx
+    const placeId = this.getPlaceId()
+    ctx.body = await ctx.service.role.getAllRole(placeId)
   }
 }
 

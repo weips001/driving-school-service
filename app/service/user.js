@@ -7,13 +7,10 @@ class UserService extends CommenService {
   async list(query) {
     const { ctx } = this
     const { count, rows } = await ctx.model.User.findAndCountAll(query)
-    const result = {
-      total: count,
-      list: rows
-    }
-    const res = this.success(result, '查询成功！')
+    const res = this.success(rows, '查询成功！')
     return {
       ...res,
+      total: count,
       success: true
     }
   }
@@ -27,8 +24,8 @@ class UserService extends CommenService {
     return this.error(null, '无当前数据，获取详情失败！')
   }
 
-  async create(schoolId, body) {
-    if (!schoolId) return this.noSchool()
+  async create(placeId, body) {
+    if (!placeId) return this.noPlace()
     const { ctx, app } = this
     const { Op } = app.Sequelize
     const { phone = '' } = body
@@ -36,12 +33,12 @@ class UserService extends CommenService {
     const [user, created] = await ctx.model.User.findOrCreate({
       where: {
         phone,
-        schoolId: schoolId || ''
+        placeId: placeId || ''
       },
       defaults: body,
       fields: [
         'name',
-        'schoolId',
+        'placeId',
         'phone',
         'password',
         'token',
@@ -54,8 +51,8 @@ class UserService extends CommenService {
     }
     return this.success(user, '创建成功！')
   }
-  async update(id, schoolId, body) {
-    if (!schoolId) return this.noSchool()
+  async update(id, placeId, body) {
+    if (!placeId) return this.noPlace()
     const { ctx, app } = this
     const { phone } = body
     const user = await ctx.model.User.findByPk(id)
@@ -63,7 +60,7 @@ class UserService extends CommenService {
       const hasUser = await ctx.model.User.findOne({
         where: {
           phone,
-          schoolId
+          placeId
         }
       })
       if (hasUser && hasUser.id !== id) {
@@ -77,9 +74,9 @@ class UserService extends CommenService {
     }
     return this.error(null, '没有查询到当前数据，无法修改！')
   }
-  async destroy() {
+  async destroy(id) {
     const { ctx } = this
-    const user = await ctx.model.User.findByPk(ctx.params.id)
+    const user = await ctx.model.User.findByPk(id)
     if (user) {
       await user.destroy()
       return this.success(null, '删除成功！')
@@ -90,11 +87,11 @@ class UserService extends CommenService {
   async getCurrentUser() {
     const { ctx, app } = this
     const userId = (ctx.state.user && ctx.state.user.userId) || null
-    const schoolId = this.getSchoolId()
+    const placeId = this.getPlaceId()
     if (userId) {
-      const user = await ctx.model.User.getUser(schoolId, userId)
-      // const school = await ctx.model.School.findByPk(schoolId)
-      // console.log(JSON.stringify(school, null, 2))
+      const user = await ctx.model.User.getUser(placeId, userId)
+      // const place = await ctx.model.Place.findByPk(placeId)
+      // console.log(JSON.stringify(place, null, 2))
       if (user) {
         return this.success(user, null)
       }

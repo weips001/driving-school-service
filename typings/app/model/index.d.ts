@@ -4,9 +4,9 @@
 import 'egg';
 import ExportAdmin = require('../../../app/model/admin');
 import ExportAuth = require('../../../app/model/auth');
+import ExportPlace = require('../../../app/model/place');
 import ExportRole = require('../../../app/model/role');
 import ExportRoleAuth = require('../../../app/model/roleAuth');
-import ExportSchool = require('../../../app/model/school');
 import ExportUser = require('../../../app/model/user');
 import ExportUserRole = require('../../../app/model/userRole');
 import ExportVip = require('../../../app/model/vip');
@@ -16,9 +16,9 @@ declare module 'egg' {
   interface IModel {
     Admin: ReturnType<typeof ExportAdmin>;
     Auth: ReturnType<typeof ExportAuth>;
+    Place: ReturnType<typeof ExportPlace>;
     Role: ReturnType<typeof ExportRole>;
     RoleAuth: ReturnType<typeof ExportRoleAuth>;
-    School: ReturnType<typeof ExportSchool>;
     User: ReturnType<typeof ExportUser>;
     UserRole: ReturnType<typeof ExportUserRole>;
     Vip: ReturnType<typeof ExportVip>;

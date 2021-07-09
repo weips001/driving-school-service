@@ -42,6 +42,10 @@ class AuthController extends CommonController {
     const ctx = this.ctx
     ctx.body = await ctx.service.auth.destroy(ctx.params.id)
   }
+  async getAllAuth() {
+    const ctx = this.ctx
+    ctx.body = await ctx.service.auth.getAllAuth()
+  }
 }
 
 module.exports = AuthController

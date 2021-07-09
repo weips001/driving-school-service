@@ -26,8 +26,8 @@ class UserRoleService extends CommenService {
     return this.error(null, '无当前数据，获取详情失败！')
   }
 
-  async create(schoolId, body) {
-    if (!schoolId) {
+  async create(placeId, body) {
+    if (!placeId) {
       return this.error('当前用户没有绑定驾校，无法操作！')
     }
     const { ctx, app } = this
@@ -35,18 +35,18 @@ class UserRoleService extends CommenService {
     const [roleAuth, created] = await ctx.model.UserRole.findOrCreate({
       where: {
         roleId,
-        schoolId,
+        placeId,
         userId
       },
       defaults: body,
-      fields: ['roleId', 'schoolId', 'userId']
+      fields: ['roleId', 'placeId', 'userId']
     })
     if (!created) {
       return this.error(null, '当前角色已绑定！')
     }
     return this.success(roleAuth, '角色绑定成功！')
   }
-  async update(id, schoolId, body) {
+  async update(id, placeId, body) {
     const { ctx, app } = this
     const { roleId, userId } = body
     const roleAuth = await ctx.model.UserRole.findByPk(id)
@@ -54,7 +54,7 @@ class UserRoleService extends CommenService {
       const hasUserRole = await ctx.model.UserRole.findOne({
         where: {
           roleId,
-          schoolId,
+          placeId,
           userId
         }
       })
@@ -78,18 +78,17 @@ class UserRoleService extends CommenService {
     }
     return this.error(null, '删除失败，没有当前数据！')
   }
-  async bindRole(schoolId, body) {
-    if (!schoolId) throw new Error('schoolId is empty!')
+  async bindRole(placeId, body) {
     const { ctx } = this
     const t = await ctx.model.transaction()
     try {
       const { userId, role } = body
       await ctx.model.query(
-        'DELETE ur FROM user_role ur WHERE ur.school_id = :schoolId AND ur.user_id = :userId',
+        'DELETE ur FROM user_role ur WHERE ur.place_id = :placeId AND ur.user_id = :userId',
         {
           type: 'DELETE',
           replacements: {
-            schoolId,
+            placeId,
             userId
           },
           transaction: t
@@ -100,7 +99,7 @@ class UserRoleService extends CommenService {
         role.forEach(item => {
           roleParams.push({
             roleId: item,
-            schoolId,
+            placeId,
             userId
           })
         })
@@ -116,6 +115,18 @@ class UserRoleService extends CommenService {
       console.log('e', e)
       return this.error(null, '角色绑定失败！')
     }
+  }
+  async getRoleIdsByUser(placeId, userId) {
+    const { ctx } = this
+    let roleIds = await ctx.model.UserRole.findAll({
+      where: {
+        placeId,
+        userId
+      },
+      attributes: ['roleId']
+    })
+    roleIds = roleIds.map(item => item.roleId)
+    return this.success(roleIds, null)
   }
 }
 

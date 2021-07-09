@@ -40,9 +40,9 @@ module.exports = app => {
         }
       }
     },
-    schoolId: {
+    placeId: {
       type: UUID,
-      field: 'school_id',
+      field: 'place_id',
       comment: '驾校id',
       allowNull: false,
       validate: {
@@ -57,15 +57,14 @@ module.exports = app => {
     }
   })
 
-  UserRole.getRoleIds = async function(schoolId, userId) {
-    if (!schoolId) throw new Error('schoolId is empty!')
+  UserRole.getRoleIds = async function(placeId, userId) {
     if (!userId) throw new Error('userId is empty!')
     let roleIds = await app.model.query(
-      'SELECT DISTINCT ur.role_id AS roleId  FROM user u LEFT JOIN user_role ur ON u.id = ur.user_id WHERE u.school_id = :schoolId AND u.id = :userId',
+      'SELECT DISTINCT ur.role_id AS roleId  FROM user u LEFT JOIN user_role ur ON u.id = ur.user_id WHERE u.place_id = :placeId AND u.id = :userId',
       {
         type: 'SELECT',
         replacements: {
-          schoolId,
+          placeId,
           userId
         }
       }

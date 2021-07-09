@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "Wps097200.+",
-    "database": "playschool",
+    "database": "playplace",
     "host": "39.99.228.79",
     "dialect": "mysql"
   },
